@@ -13,6 +13,10 @@ class GormBot(Bot):
     def __init__(self):
         super().__init__(intents=Intents.all(), debug_guilds=[1515413540972789790])
         self.logger.setLevel(logging.INFO)
+        handler = logging.StreamHandler()
+        handler.setFormatter(logging.Formatter("%(asctime)s [%(name)s] %(levelname)s: %(message)s"))
+        self.logger.addHandler(handler)
+        self.logger.propagate = False
         self.logger.info("Discord Version: %s", __version__)
         self.logger.info("GormBot is initializing...")
         self.watcher = Watcher(self, "modules", preload=True)  # type: ignore
