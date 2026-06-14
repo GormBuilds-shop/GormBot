@@ -29,7 +29,7 @@ class TicketSystem(Cog):
 
     TICKET_SLASH_COMMAND_GROUP = SlashCommandGroup(name="ticket", description="management of the ticket system")
 
-    @TICKET_SLASH_COMMAND_GROUP.slash_command(name="send_ticket_menu", default_member_permissions=Permissions(administrator=True))
+    @TICKET_SLASH_COMMAND_GROUP.command(name="send_ticket_menu", default_member_permissions=Permissions(administrator=True))
     async def send_ticket_menu(self, context: ApplicationContext):
         channel = context.channel
 
@@ -39,7 +39,7 @@ class TicketSystem(Cog):
 
         await context.respond(content="Sent Menu", ephemeral=True)
 
-    @TICKET_SLASH_COMMAND_GROUP.slash_command(name="debug_ticket", default_member_permissions=Permissions(administrator=True))
+    @TICKET_SLASH_COMMAND_GROUP.command(name="debug_ticket", default_member_permissions=Permissions(administrator=True))
     async def send_debug_ticket(self, context: ApplicationContext):
         with self.bot.db.ticket_system_table as ticket:
             data = ticket["tickets"]
@@ -48,7 +48,7 @@ class TicketSystem(Cog):
             else:
                 await context.respond(content=str(data)[:2000])
 
-    @TICKET_SLASH_COMMAND_GROUP.slash_command(name="add_member")
+    @TICKET_SLASH_COMMAND_GROUP.command(name="add_member")
     @option("member", Member, description="member to add to the ticket")
     async def add_member_to_ticket(self, context: ApplicationContext, member: Member):
         if member is None:
@@ -80,7 +80,7 @@ class TicketSystem(Cog):
         )
         await channel.send(embed=emb)
 
-    @TICKET_SLASH_COMMAND_GROUP.slash_command(name="remove_member")
+    @TICKET_SLASH_COMMAND_GROUP.command(name="remove_member")
     @option("member", Member, description="member to remove from the ticket")
     async def remove_member_from_ticket(self, context: ApplicationContext, member: Member):
         if member is None:
