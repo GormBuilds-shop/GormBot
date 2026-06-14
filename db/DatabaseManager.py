@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING
-from . import DatabaseConnection, TicketConnection
+from . import TicketConnection
 
 
 if TYPE_CHECKING:
