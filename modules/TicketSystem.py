@@ -1,11 +1,9 @@
-from ast import Delete
 import asyncio
 from discord import ApplicationContext, ButtonStyle, CategoryChannel, Colour, Embed, Guild, Interaction, Member, PartialEmoji, PermissionOverwrite, Permissions, Role, SlashCommandGroup, TextChannel, VoiceChannel, VoiceState, option
 from discord.ext.commands import Cog, Bot
 
 from typing import TYPE_CHECKING, Optional, Tuple, cast
 
-from discord.guild import GuildChannel
 from discord.ui import Button, View, button
 from discord.utils import format_dt, utcnow
 
