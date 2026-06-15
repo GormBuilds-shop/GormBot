@@ -62,6 +62,61 @@ class TicketSystem(Cog):
             else:
                 await context.respond(content=str(data)[:2000])
 
+    @TICKET_SLASH_COMMAND_GROUP.command(name="close")
+    async def close_ticket_command(self, context: ApplicationContext):
+        author = cast(Member, context.user)
+        channel = cast(TextChannel, context.channel)
+        guild = cast(Guild, context.guild)
+        bot = cast('GormBot', context.client)
+
+        ticket = bot.db.ticket_system_table.get_ticket(channel.id)
+        author_name = ticket.author_name if ticket else "unknown"
+        author_id = ticket.author_id if ticket else "unknown"
+        category = ticket.category if ticket else "unknown"
+
+        if voice_channel_id := ticket.voice_channel:
+            voice_channel = guild.get_channel(voice_channel_id)
+            if voice_channel:
+                await voice_channel.delete(reason="ticket closed")
+
+        await channel.edit(name=f"closed-{author_name}")
+        await asyncio.sleep(1)
+        bot.db.ticket_system_table.delete_ticket(channel.id)
+        audit = bot.get_cog("AuditSystem")
+        if audit:
+            await audit.send_log(content=f"{author.id} {author.display_name} Closed {author_id} {author_name}'s {category} ticket")
+        await channel.delete(reason=f"Ticket Closed by {author.id} {author.display_name}")
+
+
+    @TICKET_SLASH_COMMAND_GROUP.command(name="create_voice_channel")
+    async def create_voice_channel(self, context: ApplicationContext):
+        author = cast(Member, context.user)
+        channel = cast(TextChannel, context.channel)
+        bot = cast('GormBot', context.client)
+        guild = cast(Guild, context.guild)
+        category = cast(CategoryChannel, guild.get_channel(TICKET_CATEGORY_ID))
+
+        await context.response.defer(ephemeral=True)
+
+        ticket = bot.db.ticket_system_table.get_ticket(channel.id)
+
+        if ticket.voice_channel is not None:
+            await context.followup.send(f"Voice channel already exists at <#{ticket.voice_channel}>", ephemeral=True)
+            return
+
+        voice_channel = await category.create_voice_channel(
+            channel.name + "-voice",
+            overwrites=channel.overwrites,
+            reason=f"user requested {author.id} {author.display_name}"
+            )
+
+        ticket.voice_channel = voice_channel.id
+        bot.db.ticket_system_table.upsert_ticket(ticket)
+
+        emb = Embed(colour=Colour.blurple(), title=f"{author.display_name} created a voice chat {voice_channel.mention}")
+        await channel.send(embed=emb)
+        await context.followup.send("Voice Channel created", ephemeral=True)
+
     @TICKET_SLASH_COMMAND_GROUP.command(name="add_member")
     @option("member", Member, description="member to add to the ticket")
     async def add_member_to_ticket(self, context: ApplicationContext, member: Member):
