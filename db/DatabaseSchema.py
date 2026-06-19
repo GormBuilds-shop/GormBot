@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlalchemy import BigInteger, Enum, ForeignKey, String
+from sqlalchemy import BigInteger, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 import enum
@@ -49,7 +49,7 @@ class IndividualTicket(Base):
 class Commission(Base):
     __tablename__ = "commission"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
     project_name: Mapped[str] = mapped_column(String, nullable=False)
     budget: Mapped[str] = mapped_column(String, nullable=False)
@@ -71,4 +71,6 @@ class Commission(Base):
     status: Mapped[CommissionStatus] = mapped_column(
         Enum(CommissionStatus, native_enum=False),
         nullable=False,
+        default=CommissionStatus.open,
+        server_default=CommissionStatus.open.value,
     )
