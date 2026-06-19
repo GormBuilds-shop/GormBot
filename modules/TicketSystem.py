@@ -374,7 +374,6 @@ class TicketSelector(View):
         emoji=PartialEmoji.from_str("🔨"),
     )
     async def builder(self, button: Button, interaction: Interaction):
-        await interaction.response.defer()
         author = cast(Member, interaction.user)
         guild = cast(Guild, interaction.guild)
         bot = cast("GormBot", interaction.client)
@@ -383,6 +382,7 @@ class TicketSelector(View):
         if comission_tracking:
             await comission_tracking.create_commission(interaction.response)
             return
+        await interaction.response.defer()
 
         result, msg = await create_ticket(
             bot, author, guild, TicketCategory.misc
