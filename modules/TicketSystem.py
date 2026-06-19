@@ -1,6 +1,7 @@
 import asyncio
 from discord import ApplicationContext, ButtonStyle, CategoryChannel, Colour, Embed, Guild, Interaction, Member, PartialEmoji, PermissionOverwrite, Permissions, Role, SlashCommandGroup, TextChannel, VoiceChannel, VoiceState, option
 from discord.ext.commands import Cog, Bot
+from utils.Constants import (TICKET_CATEGORY_ID, MAIN_GUILD_ID)
 
 from typing import TYPE_CHECKING, Optional, Tuple, cast
 
@@ -12,9 +13,6 @@ from db.TicketConnection import IndividualTicket
 
 if TYPE_CHECKING:
     from utils import GormBot
-
-TICKET_CATEGORY_ID = 1515417410369487010
-GUILD_ID = 1515413540972789790
 
 
 def allow_user_permissions(category: CategoryChannel, member: Member) -> dict[Role | Member, PermissionOverwrite]:
@@ -91,7 +89,6 @@ class TicketSystem(Cog):
         bot = cast('GormBot', context.client)
 
         await self._close_ticket(bot, guild, channel, author)
-
 
     @TICKET_SLASH_COMMAND_GROUP.command(name="create_voice_channel")
     async def create_voice_channel(self, context: ApplicationContext):
@@ -214,7 +211,7 @@ class TicketSystem(Cog):
     async def on_ready(self):
         ticket_ids = self.bot.db.ticket_system_table.get_all_ticket_ids()
 
-        guild = self.bot.get_guild(GUILD_ID)
+        guild = self.bot.get_guild(MAIN_GUILD_ID)
         tickets_to_delete = []
         for ticket in ticket_ids:
             channel = guild.get_channel(int(ticket))

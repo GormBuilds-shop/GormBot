@@ -1,13 +1,11 @@
 from discord.ext.commands import Cog, Bot
 from discord import Member
+from utils.Constants import MAIN_GUILD_ID, NEWBIE_ROLE_ID
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from utils import GormBot
-
-GUILD_ID = 1515413540972789790
-NEWBIE_ROLE_ID = 1515418913549058130
 
 
 class WelcomeSystem(Cog):
@@ -18,7 +16,7 @@ class WelcomeSystem(Cog):
     async def on_member_join(self, member: Member):
         guild = member.guild
 
-        if guild.id != GUILD_ID:
+        if guild.id != MAIN_GUILD_ID:
             return
 
         role = guild.get_role(NEWBIE_ROLE_ID)

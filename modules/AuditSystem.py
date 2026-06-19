@@ -2,8 +2,7 @@
 from typing import Optional
 from discord.ext.commands import Cog, Bot
 from discord import Embed
-
-AUDIT_CHANNEL_ID = 1515785727131254855
+from utils.Constants import AUDIT_CHANNEL_ID
 
 
 class AuditSystem(Cog):
