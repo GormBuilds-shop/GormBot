@@ -91,7 +91,7 @@ class CreateCommissionModal(Modal):
         is_ticket = False
         async with bot.db.ticket_session() as session:
             if channel:
-                is_ticket = session.channel_exists(channel.id)
+                is_ticket = await session.channel_exists(channel.id)
 
         ticket: IndividualTicket | None = None
         text_channel: TextChannel | None = None
@@ -104,7 +104,7 @@ class CreateCommissionModal(Modal):
                 text_channel = res
         else:
             async with bot.db.ticket_session() as session:
-                ticket = session.get_ticket(channel.id)
+                ticket = await session.get_ticket(channel.id)
             if ticket:
                 text_channel = bot.get_channel(ticket.channel_id)
 
