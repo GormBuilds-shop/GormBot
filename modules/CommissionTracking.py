@@ -251,8 +251,21 @@ class CreateCommissionModal(Modal):
         async with bot.db.commission_session() as session:
             await session.create_commission(comm)
 
-        if text_channel:
+        if text_channel and ticket and ticket.first_message:
+            try:
+                first_msg = await text_channel.fetch_message(ticket.first_message)
+                existing_embeds = list(first_msg.embeds)
+                existing_embeds.append(embed)
+                await first_msg.edit(embeds=existing_embeds)
+            except discord.NotFound:
+                await text_channel.send(embed=embed)
+        elif text_channel:
             await text_channel.send(embed=embed)
+
+        await interaction.followup.send(
+            f"Commission created in {text_channel.mention if text_channel else 'ticket'}!",
+            ephemeral=True
+        )
 
         audit_system = cast("AuditSystem", bot.get_cog("AuditSystem"))
         if audit_system:
