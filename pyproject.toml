@@ -16,3 +16,12 @@ dependencies = [
 
 [tool.uv.sources]
 coghotswap = { git = "https://github.com/TropicalShadow/CogHotSwap", rev = "cb87e3ba06ab4f04efc8903efb2cfc26e2379afe" }
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
