@@ -147,8 +147,8 @@ class CommissionTracking(Cog):
             embed.add_field(name="Assigned", value="No one", inline=False)
 
         if bill:
-            deposit_amt = bill.total_amount * (bill.deposit_percent / 100)
-            final_amt = bill.total_amount - deposit_amt
+            deposit_amt = float(bill.total_amount) * (bill.deposit_percent / 100)
+            final_amt = float(bill.total_amount) - deposit_amt
             bill_status = []
             bill_status.append(f"Deposit: ${deposit_amt:.2f} {'(Paid)' if bill.deposit_paid else '(Unpaid)'}")
             bill_status.append(f"Final: ${final_amt:.2f} {'(Paid)' if bill.final_paid else '(Unpaid)'}")
