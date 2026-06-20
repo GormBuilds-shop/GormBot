@@ -34,7 +34,7 @@ class CreateCommissionModal(Modal):
         self.add_item(
             InputText(
                 label="Project Name",
-                placeholder="Survival Spawn",
+                placeholder="PVP, Survivel, Big Castle",
                 required=True,
                 max_length=100,
             )
